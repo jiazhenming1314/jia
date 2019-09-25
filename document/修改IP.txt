@@ -1,0 +1,4 @@
+nmcli connection up ens192
+    
+nmcli connection modify ens192 ipv4.method manual ipv4.addresses 192.168.50.221/24 connection.autoconnect yes
+nmcli connection modify em2 ipv4.gateway 172.16.0.254

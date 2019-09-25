@@ -1,0 +1,54 @@
+注意事项：
+Maven 3.3 要求 JDK 1.7 或以上   java -version 检测
+linux系统
+==============================================================
+下载tar包：
+wget http://mirrors.hust.edu.cn/apache/maven/maven-3/3.3.9/binaries/apache-maven-3.3.9-bin.tar.gz
+或上官网：
+http://maven.apache.org/download.cgi
+
+解包： tar -xvf  apache-maven-3.3.9-bin.tar.gz
+移动： mv -f apache-maven-3.3.9 /usr/local/
+编辑 /etc/profile 加入：
+export MAVEN_HOME=/usr/local/apache-maven-3.3.9
+export PATH=${PATH}:${MAVEN_HOME}/bin
+运行：source /etc/profile
+================================================================
+测试：mvn -v
+
+
+================================================================
+java：
+
+解压 ：tar -xf jdk1.8
+移动到 /var/local下
+
+vim /etc/profile
+添加:
+export JAVA_HOME=/var/local/jdk1.8
+export JRE_HOME=${JAVA_HOME}/jre
+export CLASSPATH=.:${JAVA_HOME}/lib:${JRE_HOME}/lib
+export PATH=${JAVA_HOME}/bin:$PATH
+
+source  /etc/profile 即可
+
+查看版本 ： java -version
+
+
+
+nohup java -jar eureka-server2-0.0.1-SNAPSHOT.jar  &
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

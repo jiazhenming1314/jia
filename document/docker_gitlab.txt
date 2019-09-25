@@ -1,0 +1,40 @@
+安装部署：
+yum install container-selinux  container-storage-setup docker docker-client docker-common oci-register-machine oci-systemd-hook oci-umount skopeo-containers
+
+
+启动docker：
+systemctl restart docker
+systemctl enable docker
+
+
+导入gitlab：
+docker load < gitlab_zh.tar
+
+端口映射：
+docker run -d -h gitlab --name gitlab -p 443:443 -p 80:80 -p 22:22 --restart always -v /srv/gitlab/config:/etc/gitlab -v /srv/gitlab/logs:/var/log/gitlab -v /srv/gitlab/data:/var/opt/gitlab gitlab_zh:latest
+
+启动即可
+
+
+git命令行上传、下载:
+[root@node2 devops]# echo 'hello world' > hello.py
+[root@node2 devops]# git add .
+[root@node2 devops]# git commit -m "gitlab init"
+[root@node2 devops]# git remote rename origin old-origin
+如果出现以下错误，可以忽略
+error: 不能重命名配置小节 'remote.origin' 到 'remote.old-origin'
+[root@node2 devops]# git remote add origin http://192.168.4.1/devops/core_py.git
+[root@node2 devops]# git push -u origin --all
+[root@node2 devops]# git push -u origin --tags
+9、用http的方式上传代码总是需要用户名和密码。可以采用ssh免密进行上传。
+[root@node2 devops]# ssh-keygen -t rsa -C "zzg@tedu.cn" -b 4096
+[root@node2 devops]# cat ~/.ssh/id_rsa.pub
+把公钥拷贝到服务器用户的“SSH密钥”中。
+点击项目，查看项目通过ssh进行上传的地址：
+    git@192.168.4.1:devops/core_py.git
+[root@node2 devops]#  git remote remove origin
+[root@node2 devops]# git remote add origin git@192.168.50.66:devops/core_py.git
+[root@node2 devops]# cp /etc/hosts .
+[root@node2 devops]# git add .
+[root@node2 devops]# git commit -m "add file hosts"
+[root@node2 devops]# git push

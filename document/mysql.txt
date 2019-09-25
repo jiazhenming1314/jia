@@ -1,0 +1,34 @@
+部署MySQL5.7.17
+tar -xf mysql-5.7.17.tar       
+mkdir mysql
+mv *.rpm mysql
+cd mysql/
+yum -y install perl-Data-Dumper  perl-JSON  perl-Time-HiRes
+yum install *.rpm
+rpm -e --nodeps mariadb-server mariadb
+systemctl restart mysqld
+grep 'temporary password' /var/log/mysqld.log
+systemctl restart mysqld
+====================================================================
+更新配置文件：
+设置密码长度及密码策略
+[mysqld]
+validate_password_policy=0
+validate_password_length=6
+lower_case_table_names=1        #不区分大小写
+
+====================================================================
+修改密码：alter user user() identified by "123456";
+	 mysqladmin -u root -p password '1234567'
+授权：GRANT all ON *.* TO jia@'%' IDENTIFIED BY '1234.com';
+
+=====================================================================
+root 123456
+jia 1234.com
+
+Access denied for user@jia (using password:YES)
+
+====================================================================
+部署redis 
+
+

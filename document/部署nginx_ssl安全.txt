@@ -1,0 +1,88 @@
+生成SSL证书
+openssl genrsa -des3 -out jiazhenming.key 2048
+openssl req -new -key jiazhenming.key -out jiazhenming.csr
+创建一个自己签署的CA证书
+openssl req -new -x509 -days 3650 -key jiazhenming.key -out jiazhenming.crt
+
+
+
+搭建https虚拟主机
+虚拟主机配置文件
+
+upstream sslfpm {
+ server 127.0.0.1:9000 weight=10 max_fails=3 fail_timeout=20s;
+}
+
+server { 
+ listen      192.168.1.*:443; 
+ server_name  192.168.1.*; 
+ 
+ #为一个server开启ssl支持
+ ssl                  on;
+  #为虚拟主机指定pem格式的证书文件
+ ssl_certificate      /root/jiazhenming.crt; 
+ #为虚拟主机指定私钥文件
+ ssl_certificate_key  /root/jiazhenming.key; 
+ #客户端能够重复使用存储在缓存中的会话参数时间
+ ssl_session_timeout  5m;
+ #指定使用的ssl协议 
+ ssl_protocols  SSLv3 TLSv1; 
+ #指定许可的密码描述
+ ssl_ciphers  ALL:!ADH:!EXPORT56:RC4+RSA:+HIGH:+MEDIUM:+LOW:+SSLv2:+EXP; 
+ #SSLv3和TLSv1协议的服务器密码需求优先级高于客户端密码
+ ssl_prefer_server_ciphers  on;
+
+ location / { 
+  root  /root/;
+  autoindex on;
+         autoindex_exact_size    off;
+         autoindex_localtime on;
+ } 
+     # redirect server error pages to the static page /50x.html
+     #
+     error_page  500 502 503 504  /50x.html;
+     error_page  404 /404.html;
+
+ location = /50x.html {
+         root  /usr/share/nginx/www;
+     }
+   location = /404.html {
+         root  /usr/share/nginx/www;
+     }
+    
+     # proxy the PHP scripts to fpm
+     location ~ \.php$ {
+  access_log  /var/log/nginx/ssl/ssl.access.log  main;
+  error_log /var/log/nginx/ssl/ssl.error.log;
+  root /home/wangzhengyi/ssl/; 
+  fastcgi_param HTTPS  on;
+         include /etc/nginx/fastcgi_params;  
+         fastcgi_pass    sslfpm;
+     }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+https://blog.csdn.net/permanent_2008/article/details/45420501
+
+
+https://www.cnblogs.com/qq1871707128/p/7078232.html
+
+
+
+
+
+
+
+
+https://www.cnblogs.com/tianhei/p/7726505.html

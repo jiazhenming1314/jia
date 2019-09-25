@@ -1,0 +1,38 @@
+部署ssh免秘钥登陆部署
+ssh-keygen  生成秘钥
+ssh-copy-id IP地址 部署秘钥
+
+
+部署inotify-tools工具软件，监控目录内容变化
+
+安装gcc gcc-c++ libgcc 编译工具
+解压软件包
+tar -xf /root/tools.tar.gz
+部署软件
+tar -xf tools/inotify-tools-3.13.tar.gz -C  /
+
+编译安装
+cd /inotify-tools-3.13/
+./configure && make && make install
+
+验证
+ls /usr/local/bin/inotifywait
+
+部署rsync
+
+yum -y install rsync
+
+
+编写同步脚本，持续更新
+vim rsync.sh
+
+#!/bin/bash
+while inotifywait -rqq /opt 
+do
+ 	rsync -az --delete /opt/  root@192.168.11.22:/opt/ 
+done
+
+
+
+
+
